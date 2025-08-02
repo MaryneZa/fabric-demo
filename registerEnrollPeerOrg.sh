@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/utils.sh
+./utils/helper.sh
 
 setClientHome() {
   ORG_DOMAIN=$1
@@ -92,8 +92,9 @@ generateConfigYaml() {
   ORG=$1
   DOMAIN=$2
   PORT=$3
-  echo ">> Generate NodeOUs config.yaml for $DOMAIN"
+  CERT_DOMAIN=$(echo "${DOMAIN}" | sed 's/\./-/g')
 
+  echo ">> Generate NodeOUs config.yaml for $DOMAIN"
   CONFIG_PATH=${PWD}/organizations/peerOrganizations/${DOMAIN}/msp
   mkdir -p $CONFIG_PATH
 
@@ -101,16 +102,16 @@ generateConfigYaml() {
 NodeOUs:
   Enable: true
   ClientOUIdentifier:
-    Certificate: cacerts/localhost-${PORT}-ca-${DOMAIN}.pem
+    Certificate: cacerts/localhost-${PORT}-ca-${CERT_DOMAIN}.pem
     OrganizationalUnitIdentifier: client
   PeerOUIdentifier:
-    Certificate: cacerts/localhost-${PORT}-ca-${DOMAIN}.pem
+    Certificate: cacerts/localhost-${PORT}-ca-${CERT_DOMAIN}.pem
     OrganizationalUnitIdentifier: peer
   AdminOUIdentifier:
-    Certificate: cacerts/localhost-${PORT}-ca-${DOMAIN}.pem
+    Certificate: cacerts/localhost-${PORT}-ca-${CERT_DOMAIN}.pem
     OrganizationalUnitIdentifier: admin
   OrdererOUIdentifier:
-    Certificate: cacerts/localhost-${PORT}-ca-${DOMAIN}.pem
+    Certificate: cacerts/localhost-${PORT}-ca-${CERT_DOMAIN}.pem
     OrganizationalUnitIdentifier: orderer
 EOF
 
